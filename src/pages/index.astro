@@ -5,6 +5,7 @@ import indoorDrones from '../assets/indoor_drones.png';
 import droneImage from '../assets/homepage/drone.jpg';
 import outdoorDronesImage from '../assets/homepage/outdoor_drones.png';
 import huskyImage from '../assets/homepage/husky.png';
+import caslabLogo from '../../public/assets/caslab_logo.png';
 
 const withBase = (path: string) => {
   const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
@@ -40,7 +41,12 @@ const withBase = (path: string) => {
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-24">
     <section id="about" class="max-w-4xl mx-auto">
-      <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">About CAS Lab</h2>
+      <div class="mb-6 flex items-center justify-center gap-4 md:justify-start">
+        <div class="h-12 w-12 flex-shrink-0 overflow-hidden">
+          <Image src={caslabLogo} alt="CAS Lab logo" class="h-full w-full object-contain" sizes="48px" />
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900">About CAS Lab</h2>
+      </div>
       <p class="text-lg text-gray-700 leading-relaxed mb-6">
         The Virginia Tech Laboratory for Coordination at Scale, or CAS Lab, studies autonomy in large-scale systems. We place particular emphasis on the relationship between agent-to-agent interaction and scalable decentralized coordination. Our primary research interests fall into the following areas:
       </p>
@@ -68,7 +74,7 @@ const withBase = (path: string) => {
 
     <section class="max-w-5xl mx-auto border-t border-gray-200 pt-16">
       <div class="max-w-4xl mx-auto text-center">
-        <h2 class="text-3xl font-bold text-gray-900 mb-6">Ryan</h2>
+        <h2 class="text-3xl font-bold text-gray-900 mb-6">Ryan K. Williams</h2>
         <p class="text-lg text-gray-700 leading-relaxed">
           Ryan K. Williams received the B.S. degree in computer engineering from Virginia Polytechnic Institute and State University, Blacksburg, VA, USA, in 2005, and the Ph.D. degree in electrical engineering from the University of Southern California, Los Angeles, CA, USA, in 2014. He is currently an Associate Professor with the Electrical and Computer Engineering Department, Virginia Polytechnic Institute and State University, where he runs the Virginia Tech Laboratory for Coordination at Scale. His research interests include control, cooperation, and intelligence in distributed multi-agent systems, topological methods in cooperative phenomena, and distributed algorithms for optimization, estimation, inference, and learning. Dr. Williams was the recipient of the Viterbi Fellowship, the NSF CRII, and CAREER grants for young investigators. He was a finalist for the Best Multirobot Paper at the 2017 IEEE International Conference on Robotics and Automation and has been featured by various news outlets, including the L.A. Times.
         </p>
