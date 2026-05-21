@@ -86,8 +86,11 @@ If the repository name changes to anything else, GitHub Pages will no longer pub
 
 1. Push changes to `main`.
 2. In GitHub, open `Settings -> Pages`.
-3. Set the source to `GitHub Actions`.
-4. The workflow in `.github/workflows/deploy-pages.yml` will build and publish the site.
+3. Under `Build and deployment`, set `Source` to `GitHub Actions`.
+4. Do not choose `Deploy from a branch`.
+5. Do not use Jekyll for this repository. This is an Astro site and must be published by the workflow in `.github/workflows/deploy-pages.yml`.
+6. After the push, open the `Actions` tab and confirm that the `Deploy to GitHub Pages` workflow runs successfully.
+7. Once the workflow finishes, confirm the site loads at `https://caslab-vt.github.io/`.
 
 Exact local commands:
 
@@ -115,9 +118,17 @@ PAGES_SITE_URL = https://caslab.ece.vt.edu
 caslab.ece.vt.edu -> caslab-vt.github.io
 ```
 
+5. After DNS propagates, return to `Settings -> Pages` and verify GitHub can issue HTTPS for the custom domain.
+
 If the university does not allow direct GitHub Pages DNS mapping, they may instead provide a reverse proxy.
 
 ## Git Remote
+
+This repository should use the following git remote:
+
+```text
+git@github.com:caslab-vt/caslab-vt.github.io.git
+```
 
 If your local clone still points to the old repository name, update it with:
 
