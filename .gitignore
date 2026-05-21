@@ -8,11 +8,6 @@ dist/
 __pycache__/
 *.py[cod]
 
-# Local agent and IDE state
-.serena/
-.codex/
-.agents/
-
 # Environment and logs
 .env
 .env.*
