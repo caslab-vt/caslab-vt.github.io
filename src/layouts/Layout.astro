@@ -1,0 +1,101 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import { SITE } from '../config';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = SITE.description } = Astro.props;
+const pageTitle = title ? `${title} | ${SITE.labName}` : `${SITE.labName} - ${SITE.university}`;
+const withBase = (path: string) => {
+  const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+  return path ? `${base}${path.replace(/^\//, '')}` : base;
+};
+
+// Define dynamic OG Image
+// If it's the homepage, use index.png. Otherwise, try to map the path to a slug.
+// For simplification, we'll just default to index.png for the home page, and generate specific ones for known routes.
+// However, to be robust, let's assume we have an og image for every page that maps to our static paths in og/[...slug].ts.
+// But standard pages like /research match /og/research.
+// What about nested pages like /research/cv? Our OG generator doesn't handle them yet (it only has static pages list).
+// So we will use a fallback.
+const currentPath = Astro.url.pathname.replace(/^\/|\/$/g, '');
+const ogSlug = currentPath === '' ? 'index' : currentPath;
+// Check if the current path is one of our supported OG pages (index, research, team, publications, news, join).
+// If not, fallback to index.
+const supportedOgPages = ['index', 'research', 'team', 'publications', 'join'];
+const finalOgSlug = supportedOgPages.includes(ogSlug) ? ogSlug : 'index';
+const ogImage = new URL(withBase(`og/${finalOgSlug}.png`), Astro.url);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self';" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href={withBase('favicon.svg')} />
+    <meta name="generator" content={Astro.generator} />
+    
+    <title>{pageTitle}</title>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={pageTitle} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={ogImage} />
+
+    {
+      Astro.url.pathname === '/' && (
+        <script is:inline type="application/ld+json" set:html={JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Person",
+          "name": SITE.author,
+          "url": SITE.website,
+          "image": new URL(SITE.avatar || SITE.logo, SITE.website).href,
+          "jobTitle": "Principal Investigator",
+          "worksFor": {
+            "@type": "Organization",
+            "name": SITE.labName,
+            "url": SITE.website
+          },
+          "description": SITE.description
+        })} />
+      )
+    }
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <Header />
+    <main class="flex-grow" data-pagefind-body>
+      <slot />
+    </main>
+    
+    <footer class="border-t border-gray-100 py-8 mt-12 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
+
+      <div class="flex justify-center gap-6 mb-4">
+        <a href="https://scholar.google.com/citations?user=CRclm5cAAAAJ" target="_blank" class="text-gray-500 hover:text-blue-600 transition-colors" aria-label="Google Scholar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M6 12.5V16a6 3 0 0 0 12 0v-3.5M11 22c-5 0-7-2-7-5v-5l8-4 8 4v5c0 3-2 5-7 5z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/@coordinationatscalelab6871" target="_blank" class="text-gray-500 hover:text-red-600 transition-colors" aria-label="YouTube">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+        </a>
+      </div>
+
+        <p>Coordination at Scale Laboratory, Virginia Tech</p>
+      </div>
+    </footer>
+  </body>
+</html>

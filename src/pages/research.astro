@@ -1,0 +1,82 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import PublicationItem from '../components/PublicationItem.astro';
+import { isWilliamsPublication } from '../utils/publications';
+
+const patents = (await getCollection('patents')).sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+const honors = (await getCollection('honors')).sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+
+const papers = (await getCollection('publications'))
+  .filter((p) => p.data.type === 'paper' && isWilliamsPublication(p))
+  .sort((a, b) => b.data.year - a.data.year);
+
+const researchAreas = [
+  "Networked Dynamical Systems and Distributed Control",
+  "Decentralized Decision-Making and Optimization",
+  "Heterogeneous Multi-Robot Coordination",
+  "Ultra Large-Scale Systems, such as Swarms, Internet of Things (IoT), and Cloud/Fog Computing for Distributed Autonomy"
+];
+---
+
+<Layout title="Research & Publications">
+  <div class="max-w-4xl mx-auto px-4 py-12 sm:py-20">
+    <div class="mb-16">
+      <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight sm:text-5xl mb-6">Research Areas</h1>
+      <p class="text-lg text-gray-700 leading-relaxed mb-8">
+        The Virginia Tech Laboratory for Coordination at Scale, or CAS Lab, studies autonomy in large-scale systems. We place particular emphasis on the relationship between agent-to-agent interaction and scalable decentralized coordination. Our primary research interests fall into the following areas:
+      </p>
+      <ul class="list-disc pl-6 space-y-3 text-lg text-gray-800">
+        {researchAreas.map(area => (
+          <li>{area}</li>
+        ))}
+      </ul>
+    </div>
+
+    <!-- Awards Section -->
+    <div class="border-t border-gray-200 pt-16">
+      <h2 class="text-3xl font-bold text-gray-900 mb-10">Awards & Honors</h2>
+      <div class="space-y-6">
+        {honors.length > 0 ? honors.map(honor => (
+           <div class="py-4 border-b border-gray-100 last:border-0 flex items-center space-x-4">
+             <div class="flex-grow">
+               <h3 class="text-lg font-semibold text-gray-900">{honor.data.title}</h3>
+               <p class="text-gray-600 text-sm">{honor.data.award}</p>
+             </div>
+             <div class="text-right shrink-0">
+               <span class="inline-block px-3 py-1 bg-amber-50 text-amber-700 border border-amber-200 rounded-full text-sm font-medium">{honor.data.year}</span>
+             </div>
+           </div>
+        )) : <p class="text-gray-500 italic">No awards found.</p>}
+      </div>
+    </div>
+
+    <!-- Patents Section -->
+    <div class="border-t border-gray-200 pt-16 mt-16">
+      <h2 class="text-3xl font-bold text-gray-900 mb-10">Patents</h2>
+      <div class="space-y-6">
+        {patents.length > 0 ? patents.map(patent => (
+           <div class="py-4 border-b border-gray-100 last:border-0">
+             <h3 class="text-lg font-semibold text-gray-900">{patent.data.title}</h3>
+             <p class="text-gray-600 text-sm">{patent.data.inventors.join(', ')}</p>
+             <p class="text-gray-500 text-sm mt-1">{patent.data.number} &middot; {new Date(patent.data.date).getFullYear()}</p>
+           </div>
+        )) : <p class="text-gray-500 italic">No patents found.</p>}
+      </div>
+    </div>
+
+    <!-- Publications Section -->
+    <div class="border-t border-gray-200 pt-16 mt-16">
+      <h2 class="text-3xl font-bold text-gray-900 mb-10">Publications</h2>
+      <div class="space-y-6">
+        {papers.map((paper) => (
+          <PublicationItem entry={paper} />
+        ))}
+        {papers.length === 0 && (
+          <p class="text-gray-500 italic py-8">No publications found.</p>
+        )}
+      </div>
+    </div>
+
+  </div>
+</Layout>

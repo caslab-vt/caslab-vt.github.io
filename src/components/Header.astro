@@ -1,0 +1,293 @@
+---
+import { SITE, LOGO_IMAGE } from '../config';
+import { Menu, X, ChevronDown, Search } from 'lucide-react';
+
+const { nav, customPages } = SITE;
+const withBase = (path: string) => {
+  const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+  return path ? `${base}${path.replace(/^\//, '')}` : base;
+};
+const resolveHref = (path: string) => (/^(?:[a-z]+:)?\/\//i.test(path) ? path : withBase(path));
+const logoSrc = SITE.logo ? resolveHref(SITE.logo) : undefined;
+---
+
+<header class="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-gray-100 transition-colors duration-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <!-- Logo & Name -->
+      <div class="flex items-center gap-3">
+        <a href={withBase('')} class="flex items-center gap-2 group">
+          {LOGO_IMAGE.enable && logoSrc && <img src={logoSrc} alt="Logo" class="h-8 w-8 object-contain" />}
+          <div class="flex flex-col sm:flex-row sm:items-end sm:gap-2 leading-tight">
+            <span class="font-bold text-gray-900 text-lg leading-tight group-hover:text-blue-600 transition-colors">
+              {SITE.labName}
+            </span>
+            <span class="hidden sm:inline text-gray-500 text-sm font-light pb-0.5">
+              {SITE.university}
+            </span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex gap-6 items-center">
+        {nav.map(item => {
+          if (item.key === 'search') {
+            return (
+              <a 
+                href={resolveHref(item.link)} 
+                class="p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-full transition-colors"
+                aria-label={item.text}
+              >
+                <Search className="w-5 h-5" />
+              </a>
+            );
+          }
+          return (
+            <a 
+              href={resolveHref(item.link)} 
+              class="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors"
+              data-i18n-key={`nav.${item.key}`}
+            >
+              {item.text}
+            </a>
+          );
+        })}
+        
+        <!-- Custom Pages -->
+        {customPages && customPages.map(item => (
+           <a 
+             href={resolveHref(item.link)} 
+            class="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors"
+             data-i18n-key={item.key} 
+           >
+             {item.text}
+           </a>
+        ))}
+        <a
+          href="https://scholar.google.com/citations?user=CRclm5cAAAAJ"
+          target="_blank"
+          rel="noreferrer"
+          class="ml-2 p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-full transition-colors"
+          aria-label="Google Scholar"
+          title="Google Scholar"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M22 10v6M6 12.5V16a6 3 0 0 0 12 0v-3.5M11 22c-5 0-7-2-7-5v-5l8-4 8 4v5c0 3-2 5-7 5z"></path></svg>
+        </a>
+      </nav>
+
+      <!-- Mobile Menu Button -->
+      <button 
+        id="mobile-menu-btn" 
+        class="md:hidden p-2 -mr-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors z-[80] relative" 
+        aria-label="Toggle menu"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+        onclick="window.toggleMobileMenu(event)"
+      >
+        <span class="icon-menu block transition-transform duration-300">
+          <Menu className="w-6 h-6" />
+        </span>
+        <span class="icon-close hidden absolute inset-0 flex items-center justify-center transition-transform duration-300 rotate-90">
+          <X className="w-6 h-6" />
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Nav Overlay (Solid White) -->
+  <div 
+    id="mobile-menu" 
+    class="fixed inset-0 z-[100] w-screen h-screen bg-white md:hidden hidden flex-col"
+    style="display: none;"
+    role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="mobile-menu-title"
+  >
+    <!-- Header with Close Button -->
+    <div class="flex items-center justify-between px-6 h-20 border-b border-gray-100 shrink-0 bg-white">
+      <div class="flex items-center gap-3">
+        {LOGO_IMAGE.enable && logoSrc && <img src={logoSrc} alt="Logo" class="h-10 w-10 object-contain" />}
+        <span class="font-bold text-gray-900 text-xl">{SITE.labName}</span>
+      </div>
+      <button 
+        onclick="window.closeMobileMenu()" 
+        class="p-2 -mr-2 rounded-full text-gray-600 hover:bg-gray-100 transition-colors"
+        aria-label="Close menu"
+      >
+        <X className="w-8 h-8" />
+      </button>
+    </div>
+    
+    <!-- Scrollable Menu Content -->
+    <nav class="flex-1 overflow-y-auto px-6 py-8 flex flex-col gap-2 bg-white">
+      {nav.map((item) => (
+        <a 
+          href={resolveHref(item.link)} 
+          class="flex items-center justify-between w-full py-4 px-4 text-lg font-medium text-gray-800 hover:text-blue-600 hover:bg-gray-50 rounded-xl transition-all border-b border-gray-100 last:border-0"
+          data-i18n-key={`nav.${item.key}`}
+          onclick="window.closeMobileMenu()"
+        >
+          <span>{item.text}</span>
+          <ChevronDown className="w-5 h-5 -rotate-90 text-gray-400" />
+        </a>
+      ))}
+      
+      <!-- Custom Pages Mobile -->
+      {customPages && customPages.map((item) => (
+        <a 
+          href={resolveHref(item.link)} 
+          class="flex items-center justify-between w-full py-4 px-4 text-lg font-medium text-gray-800 hover:text-blue-600 hover:bg-gray-50 rounded-xl transition-all border-b border-gray-100 last:border-0"
+          data-i18n-key={item.key}
+          onclick="window.closeMobileMenu()"
+        >
+           <span>{item.text}</span>
+           <ChevronDown className="w-5 h-5 -rotate-90 text-gray-400" />
+        </a>
+      ))}
+
+      <a
+        href="https://scholar.google.com/citations?user=CRclm5cAAAAJ"
+        target="_blank"
+        rel="noreferrer"
+        class="mt-8 flex items-center justify-between w-full py-4 px-4 text-lg font-medium text-gray-800 hover:text-blue-600 hover:bg-gray-50 rounded-xl transition-all border-t border-gray-100"
+        onclick="window.closeMobileMenu()"
+      >
+        <span>Google Scholar</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-gray-400"><path d="M22 10v6M6 12.5V16a6 3 0 0 0 12 0v-3.5M11 22c-5 0-7-2-7-5v-5l8-4 8 4v5c0 3-2 5-7 5z"></path></svg>
+      </a>
+    </nav>
+
+    <!-- Footer Info -->
+    <div class="p-8 bg-gray-50 shrink-0 border-t border-gray-200">
+       <p class="text-sm text-gray-500 font-medium text-center">© {new Date().getFullYear()} {SITE.labName}</p>
+    </div>
+  </div>
+</header>
+
+<script is:inline>
+  (function() {
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    const iconMenu = document.querySelector('.icon-menu');
+    const iconClose = document.querySelector('.icon-close');
+    let lastFocusedEl = null;
+
+    function setAria(open) {
+      btn?.setAttribute('aria-expanded', open ? 'true' : 'false');
+      menu?.setAttribute('aria-hidden', open ? 'false' : 'true');
+    }
+
+    function trapFocus(e) {
+      if (!menu || !menu.contains(document.activeElement)) return;
+      if (e.key !== 'Tab') return;
+      const focusable = menu.querySelectorAll('a, button, input, [tabindex]:not([tabindex="-1"])');
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+
+    function onKeydown(e) {
+      if (e.key === 'Escape') {
+        window.closeMobileMenu();
+      } else {
+        trapFocus(e);
+      }
+    }
+
+    function openMenu() {
+      // Show menu container (display: flex)
+      if (menu) {
+        menu.style.display = 'flex';
+        // Force reflow
+        menu.offsetHeight;
+        menu.classList.remove('hidden');
+        
+        // Add simple fade in
+        menu.animate([
+          { opacity: 0 },
+          { opacity: 1 }
+        ], {
+          duration: 200,
+          fill: 'forwards',
+          easing: 'ease-out'
+        });
+      }
+      
+      // Animate hamburger to X
+      iconMenu?.classList.add('rotate-90', 'opacity-0');
+      iconClose?.classList.remove('hidden', 'rotate-90');
+      
+      // Lock body scroll
+      document.body.classList.add('overflow-hidden');
+      setAria(true);
+
+      lastFocusedEl = document.activeElement;
+      // Focus the first link
+      const firstLink = menu?.querySelector('a');
+      firstLink?.focus?.();
+      
+      document.addEventListener('keydown', onKeydown);
+    }
+
+    window.closeMobileMenu = function() {
+      // Animate fade out
+      if (menu) {
+        const animation = menu.animate([
+          { opacity: 1 },
+          { opacity: 0 }
+        ], {
+          duration: 200,
+          fill: 'forwards',
+          easing: 'ease-in'
+        });
+        
+        animation.onfinish = () => {
+          menu.style.display = 'none';
+          menu.classList.add('hidden');
+        };
+      }
+      
+      // Animate X back to hamburger
+      iconMenu?.classList.remove('rotate-90', 'opacity-0');
+      iconClose?.classList.add('rotate-90');
+      setTimeout(() => {
+        iconClose?.classList.add('hidden');
+      }, 200);
+
+      // Unlock body scroll
+      document.body.classList.remove('overflow-hidden');
+      setAria(false);
+
+      document.removeEventListener('keydown', onKeydown);
+      if (lastFocusedEl && typeof lastFocusedEl.focus === 'function') {
+        lastFocusedEl.focus();
+      } else {
+        btn?.focus?.();
+      }
+    };
+
+    window.toggleMobileMenu = function(e) {
+      if (e) e.stopPropagation();
+      if (!menu) return;
+      const isHidden = menu.style.display === 'none' || menu.classList.contains('hidden');
+      if (isHidden) openMenu();
+      else window.closeMobileMenu();
+    };
+
+    // Close on link click in drawer
+    menu?.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', window.closeMobileMenu);
+    });
+
+    // Auto close when resizing to desktop
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 768) window.closeMobileMenu();
+    });
+  })();
+</script>

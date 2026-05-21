@@ -1,0 +1,56 @@
+{
+  "name": "caslab-website",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Astro site for the Virginia Tech Coordination at Scale Laboratory.",
+  "license": "MIT",
+  "author": "CAS Lab",
+  "homepage": "https://caslab.ece.vt.edu/",
+  "repository": {
+    "type": "git",
+    "url": "https://caslab.ece.vt.edu/"
+  },
+  "bugs": {
+    "url": "https://caslab.ece.vt.edu/"
+  },
+  "keywords": [
+    "academic",
+    "scholar",
+    "astro",
+    "research-lab",
+    "publication-list",
+    "tailwindcss"
+  ],
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && pagefind --site dist",
+    "preview": "astro preview",
+    "astro": "astro",
+    "import-bibtex": "node scripts/import-bibtex.js",
+    "lint": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.6",
+    "@astrojs/react": "^4.4.2",
+    "@resvg/resvg-js": "^2.6.2",
+    "@tailwindcss/vite": "^4.1.17",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "astro": "^5.16.2",
+    "bibtex-parse-js": "^0.0.24",
+    "lucide-react": "^0.555.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "satori": "^0.18.3",
+    "sharp": "^0.34.5",
+    "slugify": "^1.6.6",
+    "tailwindcss": "^4.1.17",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "pagefind": "^1.4.0"
+  }
+}

@@ -1,0 +1,32 @@
+# Node / Astro build output
+node_modules/
+.astro/
+dist/
+
+# Python / local tooling
+.venv/
+__pycache__/
+*.py[cod]
+
+# Local agent and IDE state
+.serena/
+.codex/
+.agents/
+
+# Environment and logs
+.env
+.env.*
+!.env.example
+*.log
+npm-debug.log*
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+
+# Local migration scratch work and archived reference material
+archive/references/
+scholar-lite/
+fix_*.cjs
+parse_*.py
+reorder_research.cjs
