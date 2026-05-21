@@ -2,7 +2,9 @@
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
 import indoorDrones from '../assets/indoor_drones.png';
-import ryanProfile from '../assets/people/ryan_williams_profile_picture.jpg';
+import droneImage from '../assets/homepage/drone.jpg';
+import outdoorDronesImage from '../assets/homepage/outdoor_drones.png';
+import huskyImage from '../assets/homepage/husky.png';
 
 const withBase = (path: string) => {
   const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
@@ -48,22 +50,28 @@ const withBase = (path: string) => {
         <li>Heterogeneous Multi-Robot Coordination</li>
         <li>Ultra Large-Scale Systems, such as Swarms, Internet of Things (IoT), and Cloud/Fog Computing for Distributed Autonomy</li>
       </ul>
+      <div class="mb-8 flex flex-wrap justify-center gap-6">
+        <div class="aspect-square w-44 overflow-hidden rounded-2xl bg-gray-100 shadow-sm md:w-56">
+          <Image src={droneImage} alt="Autonomous drone platform" class="h-full w-full object-cover" sizes="(min-width: 768px) 224px, 176px" />
+        </div>
+        <div class="aspect-square w-44 overflow-hidden rounded-2xl bg-gray-100 shadow-sm md:w-56">
+          <Image src={outdoorDronesImage} alt="Outdoor drone coordination experiment" class="h-full w-full object-cover object-center" sizes="(min-width: 768px) 224px, 176px" />
+        </div>
+        <div class="aspect-square w-44 overflow-hidden rounded-2xl bg-gray-100 shadow-sm md:w-56">
+          <Image src={huskyImage} alt="Ground robotics platform" class="h-full w-full object-cover" sizes="(min-width: 768px) 224px, 176px" />
+        </div>
+      </div>
       <p class="text-lg text-gray-700 leading-relaxed text-center">
         See our <a href="https://www.youtube.com/@coordinationatscalelab6871" class="text-blue-600 hover:underline">YouTube channel</a> for videos of our recent work. We are always interested in creative, self-motivated individuals. <a href={withBase('team')} class="text-blue-600 hover:underline">Contact us</a> for opportunities to join CAS Lab.
       </p>
     </section>
 
     <section class="max-w-5xl mx-auto border-t border-gray-200 pt-16">
-      <div class="grid gap-10 md:grid-cols-[220px,1fr] md:items-start">
-        <div class="mx-auto w-44 overflow-hidden rounded-2xl bg-gray-100 shadow-sm md:mx-0 md:w-56">
-          <Image src={ryanProfile} alt="Ryan K. Williams" class="h-full w-full object-cover" sizes="(min-width: 768px) 224px, 176px" />
-        </div>
-        <div>
-          <h2 class="text-3xl font-bold text-gray-900 mb-6">Lab Director</h2>
-          <p class="text-lg text-gray-700 leading-relaxed">
-            Ryan K. Williams received the B.S. degree in computer engineering from Virginia Polytechnic Institute and State University, Blacksburg, VA, USA, in 2005, and the Ph.D. degree in electrical engineering from the University of Southern California, Los Angeles, CA, USA, in 2014. He is currently an Associate Professor with the Electrical and Computer Engineering Department, Virginia Polytechnic Institute and State University, where he runs the Virginia Tech Laboratory for Coordination at Scale. His research interests include control, cooperation, and intelligence in distributed multi-agent systems, topological methods in cooperative phenomena, and distributed algorithms for optimization, estimation, inference, and learning. Dr. Williams was the recipient of the Viterbi Fellowship, the NSF CRII, and CAREER grants for young investigators. He was a finalist for the Best Multirobot Paper at the 2017 IEEE International Conference on Robotics and Automation and has been featured by various news outlets, including the L.A. Times.
-          </p>
-        </div>
+      <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-3xl font-bold text-gray-900 mb-6">Ryan</h2>
+        <p class="text-lg text-gray-700 leading-relaxed">
+          Ryan K. Williams received the B.S. degree in computer engineering from Virginia Polytechnic Institute and State University, Blacksburg, VA, USA, in 2005, and the Ph.D. degree in electrical engineering from the University of Southern California, Los Angeles, CA, USA, in 2014. He is currently an Associate Professor with the Electrical and Computer Engineering Department, Virginia Polytechnic Institute and State University, where he runs the Virginia Tech Laboratory for Coordination at Scale. His research interests include control, cooperation, and intelligence in distributed multi-agent systems, topological methods in cooperative phenomena, and distributed algorithms for optimization, estimation, inference, and learning. Dr. Williams was the recipient of the Viterbi Fellowship, the NSF CRII, and CAREER grants for young investigators. He was a finalist for the Best Multirobot Paper at the 2017 IEEE International Conference on Robotics and Automation and has been featured by various news outlets, including the L.A. Times.
+        </p>
       </div>
     </section>
   </div>
