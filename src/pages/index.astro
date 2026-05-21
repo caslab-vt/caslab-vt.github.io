@@ -41,11 +41,14 @@ const withBase = (path: string) => {
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-24">
     <section id="about" class="max-w-4xl mx-auto">
-      <div class="mb-6 flex items-center justify-center gap-4 md:justify-start">
-        <div class="h-12 w-12 flex-shrink-0 overflow-hidden">
-          <Image src={caslabLogo} alt="CAS Lab logo" class="h-full w-full object-contain" sizes="48px" />
+      <div class="mb-6 flex justify-center">
+        <div class="grid grid-cols-[auto,1fr,auto] items-center gap-4">
+          <div class="h-30 w-30 flex-shrink-0 overflow-hidden">
+            <Image src={caslabLogo} alt="CAS Lab logo" class="h-full w-full object-contain" sizes="120px" />
+          </div>
+          <h2 class="text-3xl font-bold text-gray-900 text-center">About CAS Lab</h2>
+          <div class="h-30 w-30 opacity-0" aria-hidden="true"></div>
         </div>
-        <h2 class="text-3xl font-bold text-gray-900">About CAS Lab</h2>
       </div>
       <p class="text-lg text-gray-700 leading-relaxed mb-6">
         The Virginia Tech Laboratory for Coordination at Scale, or CAS Lab, studies autonomy in large-scale systems. We place particular emphasis on the relationship between agent-to-agent interaction and scalable decentralized coordination. Our primary research interests fall into the following areas:
