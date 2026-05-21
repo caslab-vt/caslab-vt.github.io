@@ -41,13 +41,9 @@ const withBase = (path: string) => {
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-24">
     <section id="about" class="max-w-4xl mx-auto">
-      <div class="mb-6 flex justify-center">
-        <div class="grid grid-cols-[7rem,auto,7rem] items-center gap-4">
-          <div class="h-28 w-28 flex-shrink-0 overflow-hidden">
-            <Image src={caslabLogo} alt="CAS Lab logo" class="h-full w-full object-contain" sizes="112px" />
-          </div>
-          <h2 class="text-3xl font-bold text-gray-900 text-center">About CAS Lab</h2>
-          <div class="h-28 w-28 opacity-0" aria-hidden="true"></div>
+      <div class="mb-8 flex justify-center">
+        <div class="aspect-square w-44 overflow-hidden md:w-56">
+          <Image src={caslabLogo} alt="CAS Lab logo" class="h-full w-full object-contain" sizes="(min-width: 768px) 224px, 176px" />
         </div>
       </div>
       <p class="text-lg text-gray-700 leading-relaxed mb-6">
@@ -59,7 +55,7 @@ const withBase = (path: string) => {
         <li>Heterogeneous Multi-Robot Coordination</li>
         <li>Ultra Large-Scale Systems, such as Swarms, Internet of Things (IoT), and Cloud/Fog Computing for Distributed Autonomy</li>
       </ul>
-      <div class="mb-8 flex flex-wrap justify-center gap-6">
+      <div class="mb-8 flex flex-wrap justify-center gap-12 md:gap-16">
         <div class="aspect-square w-44 overflow-hidden rounded-2xl bg-gray-100 shadow-sm md:w-56">
           <Image src={droneImage} alt="Autonomous drone platform" class="h-full w-full object-cover" sizes="(min-width: 768px) 224px, 176px" />
         </div>
