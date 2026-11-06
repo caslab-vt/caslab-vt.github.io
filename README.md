@@ -2,12 +2,12 @@
 
 This repository contains the Astro-based website for the Virginia Tech Coordination at Scale Laboratory (CAS Lab).
 
-Primary public URLs:
+The site is built as a static Astro project and deployed with GitHub Actions through GitHub Pages.
 
-- `https://caslab-vt.github.io/`
-- `https://caslab.ece.vt.edu/`
+- GitHub Pages URL: `https://caslab-vt.github.io/`
+- Optional university domain: `https://caslab.ece.vt.edu/`
 
-The site is built as a static Astro project and deployed with GitHub Actions through GitHub Pages. The same deployed site can also be served from the university domain.
+The university domain requires separate DNS and HTTPS setup. Configuring it as the Pages custom domain redirects the GitHub Pages URL to that domain; these are not two independent deployments.
 
 ## Stack
 
@@ -54,8 +54,6 @@ npm run lint
 - `public/` - static files copied directly to the build
 - `.github/workflows/deploy-pages.yml` - GitHub Pages deployment workflow
 
-Reference and scrape artifacts that are not part of the live site have been moved under `archive/`.
-
 ## Deployment
 
 This repository is intended to be the special GitHub Pages organization site repository.
@@ -72,55 +70,47 @@ That exact pairing produces:
 
 If the repository name changes to anything else, GitHub Pages will no longer publish at the root URL and will instead use a project-style path.
 
-### Recommended Release Sequence
+### GitHub Pages recovery and deployment
 
-1. Commit local changes.
-2. Update the local `origin` remote if it still points to the old repository name.
-3. Push to `main`.
-4. Enable GitHub Pages with `GitHub Actions` as the source.
-5. Confirm the site is live at `https://caslab-vt.github.io/`.
-6. Configure the custom domain in GitHub Pages.
-7. Ask university IT to point `caslab.ece.vt.edu` to GitHub Pages.
+The workflow in [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml) runs on pushes to `main` and supports manual runs. Its `build` job uses Node.js 22, runs `npm ci` and `npm run build` (Astro and Pagefind), then uploads `dist/`. The `deploy` job publishes that artifact through the `github-pages` environment.
 
-### GitHub Pages
+Use the following checklist to recover the standalone GitHub Pages URL. Repository settings and DNS are separate from the committed files; this checklist does not imply that those settings have already been changed or verified.
 
-1. Push changes to `main`.
-2. In GitHub, open `Settings -> Pages`.
-3. Under `Build and deployment`, set `Source` to `GitHub Actions`.
-4. Do not choose `Deploy from a branch`.
-5. Do not use Jekyll for this repository. This is an Astro site and must be published by the workflow in `.github/workflows/deploy-pages.yml`.
-6. After the push, open the `Actions` tab and confirm that the `Deploy to GitHub Pages` workflow runs successfully.
-7. Once the workflow finishes, confirm the site loads at `https://caslab-vt.github.io/`.
+1. In [Settings -> Pages](https://github.com/caslab-vt/caslab-vt.github.io/settings/pages), set **Build and deployment -> Source** to **GitHub Actions**. Do not select **Deploy from a branch** or a Jekyll build: the Astro source must be built first.
+2. If the intended destination is `https://caslab-vt.github.io/`, leave **Custom domain** empty. Remove a stale university-domain entry only when restoring the standalone GitHub URL is intended. A configured custom domain can redirect an otherwise successful GitHub Pages deployment.
+3. In **Settings -> Secrets and variables -> Actions -> Variables**, check `PAGES_SITE_URL` and `PAGES_BASE_PATH`. For this organization-site repository, leaving both unset uses `https://caslab-vt.github.io/` and `/` during Actions builds. If explicit overrides are needed, use those values. Remove old project-path or university-domain overrides when recovering the standalone GitHub URL. These variables control the generated site; they do not configure Pages routing, DNS, or certificates.
+4. Start a **new** run from `main`: open [Actions -> Deploy to GitHub Pages](https://github.com/caslab-vt/caslab-vt.github.io/actions/workflows/deploy-pages.yml), choose **Run workflow**, select **main**, and run it. A new push to `main` also triggers the workflow. Changing settings or variables alone does not rebuild the site.
+5. Check the new run's branch and commit, then confirm that **both `build` and `deploy` succeed**. If deployment is awaiting approval, review the `github-pages` environment's protection rules. Build success alone does not confirm publication.
+6. Open the deployment URL and verify the homepage, internal navigation, images/styles, and search. Check the final browser URL for unexpected redirects and refresh to avoid testing an old cached page.
 
-Exact local commands:
+For normal releases, review and commit the intended changes, then push to `main`:
 
 ```bash
-git add .
+git add <changed-files>
 git commit -m "Update CAS Lab website"
 git push origin main
 ```
 
-### Custom Domain
+If a run fails, inspect the failed job before retrying: dependency/build failures belong to `build`; Pages permissions, environment approvals, and publishing failures belong to `deploy`. An old successful run does not verify the current configuration.
 
-For the university domain:
+### University domain: separate cutover
 
-1. In GitHub, open `Settings -> Pages`.
-2. Set the custom domain to `caslab.ece.vt.edu`.
-3. In `Settings -> Secrets and variables -> Actions -> Variables`, add:
+Complete and verify the GitHub Pages deployment first. Coordinate the following cutover with university IT rather than treating the domain change as part of GitHub URL recovery.
 
-```text
-PAGES_SITE_URL = https://caslab.ece.vt.edu
-```
+1. Confirm with university IT that `caslab.ece.vt.edu` can point directly to GitHub Pages and agree on the cutover.
+2. When ready, set **Settings -> Pages -> Custom domain** to `caslab.ece.vt.edu`. This changes the public destination: GitHub Pages redirects the default `github.io` URL to the custom domain.
+3. Set the Actions repository variable `PAGES_SITE_URL` to `https://caslab.ece.vt.edu`. Leave `PAGES_BASE_PATH` unset or set it to `/`.
+4. Ask university IT to create the DNS record:
 
-4. Ask the university IT team to create a DNS `CNAME` record:
+   ```text
+   caslab.ece.vt.edu CNAME caslab-vt.github.io
+   ```
 
-```text
-caslab.ece.vt.edu -> caslab-vt.github.io
-```
+   The target is a hostname, without `https://` or a path. Changing `PAGES_SITE_URL` alone does not create this DNS record.
+5. After DNS propagates, confirm the domain check succeeds in **Settings -> Pages**. Wait for GitHub's certificate to be available, then enable **Enforce HTTPS**.
+6. Start a new deployment from `main` using the procedure above. Confirm both jobs succeed and test `https://caslab.ece.vt.edu/`, its internal pages and assets, and the redirect from `https://caslab-vt.github.io/`.
 
-5. After DNS propagates, return to `Settings -> Pages` and verify GitHub can issue HTTPS for the custom domain.
-
-If the university does not allow direct GitHub Pages DNS mapping, they may instead provide a reverse proxy.
+If university IT requires a reverse proxy instead of direct DNS mapping, obtain its routing and TLS requirements before changing the Pages custom domain. A proxy setup is a separate arrangement and is not verified by a successful GitHub Actions run.
 
 ## Git Remote
 
@@ -155,4 +145,4 @@ That should be updated before the next push.
 ## Notes
 
 - The local folder name does not need to match the GitHub repository name.
-- The site is configured to work both at the GitHub Pages root URL and at the custom university domain.
+- The GitHub Pages root URL and university domain use separate configuration steps; verify the intended destination after each change.
